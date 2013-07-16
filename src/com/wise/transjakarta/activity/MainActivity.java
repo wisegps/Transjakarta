@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
 			intent.setClass(MainActivity.this,RoadActivity.class);
 			startActivity(intent);
 			MainActivity.this.finish();
+			
 		}
     }
 }
