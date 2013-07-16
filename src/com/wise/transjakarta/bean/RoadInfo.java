@@ -72,4 +72,7 @@ public class RoadInfo implements Serializable{
 	public void setRoadInfos(ArrayList<RoadInfo> roadInfos) {
 		this.roadInfos = roadInfos;
 	}
+	public String toString() {
+		return "RoadName　　　　　" + RoadName;
+	}
 }
