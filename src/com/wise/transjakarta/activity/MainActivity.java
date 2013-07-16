@@ -39,9 +39,11 @@ public class MainActivity extends Activity {
 			waitBar.setVisibility(View.GONE);
 			result = msg.obj.toString();
 			String[] array1 = result.split("Road=anyType");
+			String[] array2 = null;
 			for(int i = 1 ; i < array1.length ; i++){
-				String[] array2 = array1[i].split("; ");
-				for(int j = 0 ; j < array2.length - 1 ; j ++){
+				array2 = array1[i].split("; ");
+			}
+			for(int j = 0 ; j < array2.length - 3 ; j ++){
 					if(array2[j].indexOf("=") > 0){
 						roadInfo = new RoadInfo();
 						roadInfo.setRoadID(Integer.valueOf(array2[0].substring(array2[0].indexOf("=") + 1)));
@@ -51,9 +53,7 @@ public class MainActivity extends Activity {
 						roadInfo.setPlatform(Integer.valueOf(array2[4].substring(array2[4].indexOf("=") + 1)));
 						roadInfo.setSpeed(Integer.valueOf(array2[5].substring(array2[5].indexOf("=") + 1)));
 						roadInfos.add(roadInfo);
-						
 					}
-				}
 			}
 			
 			//Ìø×ª
