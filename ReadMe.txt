@@ -1,1 +1,1 @@
-git@github.com:wisegps/Transjakarta.git¡£
+git@github.com:wisegps/Transjakarta.git
