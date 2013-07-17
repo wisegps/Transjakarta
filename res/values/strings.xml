@@ -4,4 +4,6 @@
     <string name="app_name">Transjakarta Info</string>
     <string name="action_settings">Settings</string>
 	<string name="init_road">Initializing.Please wait...</string>
+	<string name="find_station">GetRoadStationInfo</string>
+	<string name="find_in">Are Looking for,Please Wait...</string>
 </resources>

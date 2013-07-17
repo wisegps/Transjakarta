@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ksoap2.serialization.SoapObject;
 
 import com.wise.transjakarta.config.UrlConfig;
 import com.wise.transjakarta.service.WebService;
@@ -70,6 +71,50 @@ public class NetThread {
 	}
 	
 	
+	/**
+	 * 获取指定公交路线站点系信息
+	 */
+	public static class GetRoadStationInfoThread extends Thread{
+		Handler tHandler;
+		int tWhere;
+		String url;
+		String nameSpace;
+		String method;
+		int timeout;
+		String roadName;
+
+		public GetRoadStationInfoThread(Handler handler,String url,String nameSpace,String method, String roadName,int timeout,int Where){
+			tHandler = handler;
+			tWhere = Where;
+			this.url = url;
+			this.nameSpace = nameSpace;
+			this.method = method;
+			this.timeout = timeout;
+			this.roadName = roadName;
+		}
+		@Override
+		public void run() {
+			super.run();
+			SoapObject request = null;
+			try {
+				request = WebService.SoapGetRoadStationInfo(url, nameSpace, method, roadName, timeout);
+			} catch (Exception e) {
+				Log.e("error------>","异常");
+				e.printStackTrace();
+			}finally{
+				Message msg = new Message();
+				msg.what = tWhere;
+				msg.obj = request;
+				tHandler.sendMessage(msg);
+			}
+		}
+	}
+	
+	/**
+	 * post请求服务器
+	 * @author hp
+	 *
+	 */
 	public static class postDataThread extends Thread{
 		Handler handler;
 		String url;

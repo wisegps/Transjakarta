@@ -37,4 +37,32 @@ public class WebService {
     	
 		return result;
 	}
+	
+	
+	/**
+	 * 通过公交路线获取站点信息
+	 * @param url  访问地址
+	 * @param nameSpace  命名空间
+	 * @param methodName  webService接口
+	 * @param roadName   公交路线
+	 * @param timeout   链接超时
+	 * @return xml
+	 * @throws Exception
+	 */
+	public static SoapObject SoapGetRoadStationInfo(String url , String nameSpace ,String methodName, String roadName, int timeout) throws Exception{
+		
+		//初始化SOAP对象
+    	SoapObject request = new SoapObject(nameSpace, methodName);
+    	//调用参数
+    	request.addProperty("p_strRoadName", roadName);
+    	SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    	envelope.setOutputSoapObject(request);
+    	envelope.dotNet = true;
+    	HttpTransportSE ht = new HttpTransportSE(url,timeout);
+    	ht.call(nameSpace + methodName, envelope);
+		SoapObject result = (SoapObject)envelope.getResponse();
+		
+		return result;
+	}
+	
 }
