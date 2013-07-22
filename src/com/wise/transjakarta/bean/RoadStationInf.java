@@ -101,5 +101,8 @@ public class RoadStationInf {
 	public void setRoadName2(String roadName2) {
 		RoadName2 = roadName2;
 	}
-	
+
+	public String toString() {
+		return StationID + "　　　　　　　　" + StationName;
+	}
 }

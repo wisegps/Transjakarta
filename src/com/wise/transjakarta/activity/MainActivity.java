@@ -38,6 +38,8 @@ public class MainActivity extends TabActivity {
       });
 	}
 	
+	
+	//添加Arrival标签页
     public void addArrival(){
 		TabHost.TabSpec ArrivalSpec = getTabHost().newTabSpec("Est Arrival");
 		ArrivalSpec.setIndicator("Est Arrival", getResources().getDrawable(R.drawable.ic_launcher));
@@ -46,7 +48,7 @@ public class MainActivity extends TabActivity {
 		getTabHost().addTab(ArrivalSpec);
 
 	}
-    
+	//添加Announcement标签页
     public void addAnnouncement(){
 		Intent AnnouncementIntent = new Intent();
 		AnnouncementIntent.setClass(MainActivity.this,Announcement.class);
@@ -56,7 +58,7 @@ public class MainActivity extends TabActivity {
 		AnnouncementSpec.setContent(AnnouncementIntent);
 		getTabHost().addTab(AnnouncementSpec);
     }
-    
+  //添加InfoSearch标签页
     public void addInfoSearch(){
     	Intent InfoSearchIntent = new Intent();
     	InfoSearchIntent.setClass(MainActivity.this,Announcement.class);

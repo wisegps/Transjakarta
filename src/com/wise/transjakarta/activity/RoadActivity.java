@@ -1,30 +1,22 @@
 package com.wise.transjakarta.activity;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import org.ksoap2.serialization.SoapObject;
-
 import com.wise.transjakarta.bean.RoadInfo;
 import com.wise.transjakarta.bean.RoadStationInf;
 import com.wise.transjakarta.config.UrlConfig;
 import com.wise.transjakarta.net.NetThread;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RoadActivity extends Activity {
@@ -85,7 +77,8 @@ public class RoadActivity extends Activity {
 				if(msg.obj != null){
 					dialog.dismiss();
 					result = (SoapObject) msg.obj;
-					ParseSocpObject(String.valueOf(result));
+					//
+					ShowstationList(ParseSocpObject(String.valueOf(result)));
 				}
 				break;
 			}
@@ -126,4 +119,35 @@ public class RoadActivity extends Activity {
 		}
 		return roadStationInfs;
 	}
+
+	public void ShowstationList(ArrayList<RoadStationInf> list){
+		
+		for(RoadStationInf roadStationInf : list){
+			
+			
+			System.out.println("getStationID----->" + roadStationInf.getStationID());
+			System.out.println("getStationName----->" + roadStationInf.getStationName());
+			
+		}
+		
+		//初始化对话框组件
+				LayoutInflater layoutInfalter = LayoutInflater.from(RoadActivity.this);
+				View myView = layoutInfalter.inflate(R.layout.station_info_dialog,null);
+				final ListView stationList = (ListView) myView.findViewById(R.id.station_info);
+				//显示对话框
+				AlertDialog.Builder myDialog = new AlertDialog.Builder(RoadActivity.this);
+				
+				
+//				myDialog.setTitle("前往方式");
+//				myDialog.setIcon(android.R.drawable.ic_dialog_info);
+//				myDialog.setView(myView);
+//				myDialog.show();
+//				schemes.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//					public void onCheckedChanged(RadioGroup group, int checkedId) {
+//						System.out.println("------");
+//						Log.e("checked", checkedId + "");
+//					}
+//				});
+	}
+
 }

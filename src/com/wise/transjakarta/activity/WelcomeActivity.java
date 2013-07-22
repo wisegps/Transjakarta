@@ -32,7 +32,6 @@ public class WelcomeActivity extends Activity{
   	String result;
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			waitBar.setVisibility(View.GONE);
 			result = msg.obj.toString();
 			String[] array1 = result.split("Road=anyType");
 			String[] array2 = null;
@@ -54,15 +53,13 @@ public class WelcomeActivity extends Activity{
 					roadInfos.add(roadInfo);
 				}
 			}
-			//跳转
+			//跳转显示所有路线
 			roadInfo.setRoadInfos(roadInfos);
 			Intent intent = new Intent();
 			intent.putExtra("roadInfos", roadInfo);
 			intent.setClass(WelcomeActivity.this,MainActivity.class);
 			startActivity(intent);
 			WelcomeActivity.this.finish();
-			
 		}
   }
-	
 }
