@@ -2,12 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
     android:layout_width="fill_parent"  
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >   
-    
-    <TextView 
-        android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <ListView 
+        android:id="@+id/lv_Announcement"
         android:layout_width="fill_parent"
-        android:text="announcement.xml"
-        />
-    </LinearLayout> 
+        android:layout_height="wrap_content"></ListView>  
+</LinearLayout> 

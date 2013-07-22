@@ -110,6 +110,71 @@ public class NetThread {
 		}
 	}
 	
+	public static class GetDataThread extends Thread{
+		Handler handler;
+		String url;
+		int what;
+		/**
+		 * Get获取数据
+		 * @param handler
+		 * @param url
+		 * @param what
+		 */
+		public GetDataThread(Handler handler,String url,int what){
+			this.handler = handler;
+			this.url = url;
+			this.what =what;
+		}
+		@Override
+		public void run() {
+			super.run();
+			try {
+				URL myURL = new URL(url);
+				URLConnection httpsConn = (URLConnection) myURL.openConnection();
+				if (httpsConn != null) {
+					httpsConn.setConnectTimeout(20*1000);
+					httpsConn.setReadTimeout(20*1000);
+					InputStreamReader insr = new InputStreamReader(httpsConn.getInputStream(), "UTF-8");
+					BufferedReader br = new BufferedReader(insr, 1024);
+					String data = "";
+					String line = "";
+					while ((line = br.readLine()) != null) {
+						data += line;
+					}
+					insr.close();
+					Message message = new Message();
+					message.what = what;
+					message.obj = data;
+					handler.sendMessage(message);
+				}else{
+					Message message = new Message();
+					message.what = what;
+					message.obj = "";
+					handler.sendMessage(message);
+				}
+			}catch (SocketTimeoutException e) {
+				e.printStackTrace();
+				Message message = new Message();
+				message.what = what;
+				message.obj = "SocketTimeoutException";
+				handler.sendMessage(message);
+			}catch (SocketException e) {
+				e.printStackTrace();
+				Message message = new Message();
+				message.what = what;
+				message.obj = "SocketTimeoutException";
+				handler.sendMessage(message);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				Message message = new Message();
+				message.what = what;
+				message.obj = "";
+				handler.sendMessage(message);
+			}
+		}
+	}
+	
 	/**
 	 * post请求服务器
 	 * @author hp
