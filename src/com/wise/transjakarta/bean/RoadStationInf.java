@@ -21,6 +21,8 @@ public class RoadStationInf {
 	private String RoadName1 = null;
 	
 	private String RoadName2 = null;
+	
+	
 
 	public int getStationID() {
 		return StationID;
@@ -103,6 +105,6 @@ public class RoadStationInf {
 	}
 
 	public String toString() {
-		return StationID + "　　　　　　　　" + StationName;
+		return StationName;
 	}
 }

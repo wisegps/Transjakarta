@@ -73,6 +73,6 @@ public class RoadInfo implements Serializable{
 		this.roadInfos = roadInfos;
 	}
 	public String toString() {
-		return "RoadName　　　　　" + RoadName;
+		return RoadName;
 	}
 }

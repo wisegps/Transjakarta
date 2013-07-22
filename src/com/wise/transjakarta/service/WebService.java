@@ -20,7 +20,7 @@ public class WebService {
 	public static String SoapGetRoadList(String url , String nameSpace ,String methodName , int timeout) throws Exception{
 		
 		String soapAction = nameSpace + methodName;  
-		
+		 
 		SoapObject rpc = new SoapObject(nameSpace, methodName);
 		
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -63,6 +63,30 @@ public class WebService {
 		SoapObject result = (SoapObject)envelope.getResponse();
 		
 		return result;
+	}
+	/**
+	 * 获取下一辆到达时间
+	 * @param url
+	 * @param nameSpace
+	 * @param methodName
+	 * @param timeout
+	 * @return
+	 * @throws Exception
+	 */
+	public static String SoapGetNearCar(String url , String nameSpace ,String methodName ,int stationId, int timeout) throws Exception{
+		
+		//初始化SOAP对象
+    	SoapObject request = new SoapObject(nameSpace, methodName);
+    	//调用参数
+    	request.addProperty("p_intPointID", stationId);
+    	SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    	envelope.setOutputSoapObject(request);
+    	envelope.dotNet = true;
+    	HttpTransportSE ht = new HttpTransportSE(url,timeout);
+    	ht.call(nameSpace + methodName, envelope);
+		SoapObject result = (SoapObject)envelope.getResponse();
+		
+		return result.toString();
 	}
 	
 }

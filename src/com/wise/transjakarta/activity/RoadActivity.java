@@ -8,16 +8,20 @@ import com.wise.transjakarta.net.NetThread;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class RoadActivity extends Activity {
 	private ListView listView = null;
@@ -29,11 +33,13 @@ public class RoadActivity extends Activity {
 	private MyHandler myHandler = null;
 	
 	private static final int GET_STATION_INFO = 38;
+	private static final int GET_NEAR_CAR = 39;
 	
 	private ArrayList<RoadStationInf> roadStationInfs = new ArrayList<RoadStationInf>();
 	
 	
-	private ProgressDialog dialog = null;
+	private ProgressDialog stationDialog = null;
+	private ProgressDialog nearCarDialog = null;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.road_info);
@@ -63,7 +69,7 @@ public class RoadActivity extends Activity {
 					long arg3) {
 				//获取这条路线上面的站点信息
 				new Thread(new NetThread.GetRoadStationInfoThread(myHandler, UrlConfig.url, UrlConfig.nameSpace, UrlConfig.MethodGetRoadStationInfo,roadInfos.get(arg2).getRoadName(), UrlConfig.timeout, GET_STATION_INFO)).start();
-				dialog = ProgressDialog.show(RoadActivity.this, getString(R.string.find_station), getString(R.string.find_in),true);
+				stationDialog = ProgressDialog.show(RoadActivity.this, getString(R.string.find_station), getString(R.string.find_in),true);
 			}
 		});
 	}  
@@ -75,10 +81,18 @@ public class RoadActivity extends Activity {
 			switch(msg.what){
 			case GET_STATION_INFO:
 				if(msg.obj != null){
-					dialog.dismiss();
+					stationDialog.dismiss();
 					result = (SoapObject) msg.obj;
-					//
+					//显示所有公交站点信息
+					
+					System.out.println(result);
 					ShowstationList(ParseSocpObject(String.valueOf(result)));
+				}
+				break;
+			case GET_NEAR_CAR:
+				if(msg.obj != null){
+					nearCarDialog.dismiss();
+					System.out.println("result----------->" + msg.obj.toString());
 				}
 				break;
 			}
@@ -120,6 +134,8 @@ public class RoadActivity extends Activity {
 		return roadStationInfs;
 	}
 
+	
+	//显示站点信息
 	public void ShowstationList(ArrayList<RoadStationInf> list){
 		
 		for(RoadStationInf roadStationInf : list){
@@ -130,24 +146,31 @@ public class RoadActivity extends Activity {
 			
 		}
 		
+		if(list.size() == 0 ){
+			Toast.makeText(getApplicationContext(), "没有数据可显示", 0).show();
+		}else{
 		//初始化对话框组件
 				LayoutInflater layoutInfalter = LayoutInflater.from(RoadActivity.this);
 				View myView = layoutInfalter.inflate(R.layout.station_info_dialog,null);
 				final ListView stationList = (ListView) myView.findViewById(R.id.station_info);
 				//显示对话框
 				AlertDialog.Builder myDialog = new AlertDialog.Builder(RoadActivity.this);
+				ArrayAdapter<RoadStationInf> adapter = new ArrayAdapter<RoadStationInf>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+				stationList.setAdapter(adapter);
+				stationList.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+						Toast.makeText(getApplicationContext(), "点击了" + arg2, 0).show();
+						RoadStationInf rsi = (RoadStationInf) stationList.getItemAtPosition(arg2);
+						//访问WebService接口
+						new Thread(new NetThread.GetNearCarOnTimeThread(myHandler, UrlConfig.url, UrlConfig.nameSpace, UrlConfig.MethodGetNear2Vehicle,rsi.getStationID(), UrlConfig.timeout, GET_NEAR_CAR)).start();
+						nearCarDialog = ProgressDialog.show(RoadActivity.this, "搜索最近公交车","正在搜索，请稍等.....",true);
+					}
+				});
 				
-				
-//				myDialog.setTitle("前往方式");
-//				myDialog.setIcon(android.R.drawable.ic_dialog_info);
-//				myDialog.setView(myView);
-//				myDialog.show();
-//				schemes.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//					public void onCheckedChanged(RadioGroup group, int checkedId) {
-//						System.out.println("------");
-//						Log.e("checked", checkedId + "");
-//					}
-//				});
+				myDialog.setTitle("All Station");
+				myDialog.setIcon(android.R.drawable.ic_dialog_info);
+				myDialog.setView(myView);
+				myDialog.show();
+		}
 	}
-
 }

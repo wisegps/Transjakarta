@@ -110,6 +110,52 @@ public class NetThread {
 		}
 	}
 	
+	
+	
+	
+
+	/**
+	 * 获取下一辆公交车到达时间
+	 */
+	public static class GetNearCarOnTimeThread extends Thread{
+		Handler tHandler;
+		int tWhere;
+		String url;
+		String nameSpace;
+		String method;
+		int timeout;
+		int stationId;
+
+		public GetNearCarOnTimeThread(Handler handler,String url,String nameSpace,String method, int stationId,int timeout,int Where){
+			tHandler = handler;
+			tWhere = Where;
+			this.url = url;
+			this.nameSpace = nameSpace;
+			this.method = method;
+			this.timeout = timeout;
+			this.stationId = stationId;
+			
+			System.out.println("NetThread--138-----id--->" + this.stationId);
+			
+		}
+		@Override
+		public void run() {
+			super.run();
+			String request = null;
+			try {
+				request = WebService.SoapGetNearCar(url, nameSpace, method, stationId, timeout);
+			} catch (Exception e) {
+				Log.e("error------>","异常");
+				e.printStackTrace();
+			}finally{
+				Message msg = new Message();
+				msg.what = tWhere;
+				msg.obj = request;
+				tHandler.sendMessage(msg);
+			}
+		}
+	}
+	
 	public static class GetDataThread extends Thread{
 		Handler handler;
 		String url;
