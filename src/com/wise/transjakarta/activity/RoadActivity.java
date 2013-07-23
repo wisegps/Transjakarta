@@ -107,7 +107,10 @@ public class RoadActivity extends Activity {
 					}else{
 						
 						
+						//显示下一辆公交车到达时间
+						
 					System.out.println("result----------->" + msg.obj.toString());
+					
 					}
 				}
 				break;
@@ -125,6 +128,7 @@ public class RoadActivity extends Activity {
 		ArrayList<String[]> strs = new ArrayList<String[]>();
 		String[] str1 = data.split("Station=anyType");
 		for(int i = 1 ; i < str1.length ; i ++){
+			
 			String[] str2 = str1[i].split("; ");
 			roadStationInf = new RoadStationInf();
 			roadStationInf.setStationID(Integer.valueOf(str2[0].substring(11)));
@@ -165,7 +169,7 @@ public class RoadActivity extends Activity {
 						RoadStationInf rsi = (RoadStationInf) stationList.getItemAtPosition(arg2);
 						//访问WebService接口
 						new Thread(new NetThread.GetNearCarOnTimeThread(myHandler, UrlConfig.url, UrlConfig.nameSpace, UrlConfig.MethodGetNear2Vehicle,rsi.getStationID(), UrlConfig.timeout, GET_NEAR_CAR)).start();
-						nearCarDialog = ProgressDialog.show(RoadActivity.this, "搜索最近公交车","正在搜索，请稍等.....",true);
+						nearCarDialog = ProgressDialog.show(RoadActivity.this, "搜索附近公交车","正在搜索，请稍等.....",true);
 					}
 				});
 				

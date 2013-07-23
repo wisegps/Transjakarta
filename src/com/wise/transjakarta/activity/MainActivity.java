@@ -33,13 +33,16 @@ public class MainActivity extends TabActivity {
     //标签切换监听
       tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {   
           public void onTabChanged(String tabId) {   
-          	Toast.makeText(getApplicationContext(), "切换", 0).show();
+          	Toast.makeText(getApplicationContext(), "所切换标签索引-->" + tabId, 0).show();
+          	if("Info Search".equals(tabId)){
+          		
+          	}
           }   
       });
 	}
 	
 	
-	//添加Arrival标签页
+	//添加Arrival标签页 第0页
     public void addArrival(){
 		TabHost.TabSpec ArrivalSpec = getTabHost().newTabSpec("Est Arrival");
 		ArrivalSpec.setIndicator("Est Arrival", getResources().getDrawable(R.drawable.ic_launcher));
@@ -48,7 +51,7 @@ public class MainActivity extends TabActivity {
 		getTabHost().addTab(ArrivalSpec);
 
 	}
-	//添加Announcement标签页
+	//添加Announcement标签页   第1页
     public void addAnnouncement(){
 		Intent AnnouncementIntent = new Intent();
 		AnnouncementIntent.setClass(MainActivity.this,Announcement.class);
@@ -58,10 +61,10 @@ public class MainActivity extends TabActivity {
 		AnnouncementSpec.setContent(AnnouncementIntent);
 		getTabHost().addTab(AnnouncementSpec);
     }
-  //添加InfoSearch标签页
+  //添加InfoSearch标签页    第2页
     public void addInfoSearch(){
     	Intent InfoSearchIntent = new Intent();
-    	InfoSearchIntent.setClass(MainActivity.this,Announcement.class);
+    	InfoSearchIntent.setClass(MainActivity.this,InfoSearchActivity.class);
 		TabHost.TabSpec InfoSearchSpec = getTabHost().newTabSpec("Info Search");
 		InfoSearchSpec.setIndicator("Info Search", getResources().getDrawable(R.drawable.ic_launcher));
 		
