@@ -27,8 +27,9 @@ public class WelcomeActivity extends Activity{
         myHandler = new MyHandler();
         new Thread(new NetThread.GetRodListThread(myHandler, UrlConfig.url, UrlConfig.nameSpace, UrlConfig.MethodGetRoadName, UrlConfig.timeout, 0)).start();
     }
-	
-  class MyHandler extends Handler{
+
+	//用于异步接收并且处理相应的结果
+	class MyHandler extends Handler{
   	String result;
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);

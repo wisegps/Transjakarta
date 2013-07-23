@@ -112,6 +112,10 @@ public class RoadActivity extends Activity {
 						return;
 					}else{
 						GetBusArrivalEx(msg.obj.toString());
+						
+						//显示下一辆公交车到达时间
+						
+						System.out.println("result----------->" + msg.obj.toString());
 					}
 				}
 				break;
@@ -127,6 +131,7 @@ public class RoadActivity extends Activity {
 		}
 		String[] str1 = data.split("Station=anyType");
 		for(int i = 1 ; i < str1.length ; i ++){
+			
 			String[] str2 = str1[i].split("; ");
 			RoadStationInf roadStationInf = new RoadStationInf();
 			roadStationInf.setStationID(Integer.valueOf(str2[0].substring(11)));
