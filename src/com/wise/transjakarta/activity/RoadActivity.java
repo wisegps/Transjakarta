@@ -1,10 +1,16 @@
 package com.wise.transjakarta.activity;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.ksoap2.serialization.SoapObject;
+
+import com.wise.transjakarta.bean.BusArrivalInfo;
 import com.wise.transjakarta.bean.RoadInfo;
 import com.wise.transjakarta.bean.RoadStationInf;
 import com.wise.transjakarta.config.UrlConfig;
 import com.wise.transjakarta.net.NetThread;
+
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -105,9 +111,7 @@ public class RoadActivity extends Activity {
 						Toast.makeText(RoadActivity.this, msg.obj.toString(), 0).show();
 						return;
 					}else{
-						
-						
-					System.out.println("result----------->" + msg.obj.toString());
+						GetBusArrivalEx(msg.obj.toString());
 					}
 				}
 				break;
@@ -121,58 +125,73 @@ public class RoadActivity extends Activity {
 		if(roadStationInfs.size() > 0){
 			roadStationInfs.clear();
 		}
-		RoadStationInf roadStationInf = null;
-		ArrayList<String[]> strs = new ArrayList<String[]>();
 		String[] str1 = data.split("Station=anyType");
 		for(int i = 1 ; i < str1.length ; i ++){
 			String[] str2 = str1[i].split("; ");
-			roadStationInf = new RoadStationInf();
+			RoadStationInf roadStationInf = new RoadStationInf();
 			roadStationInf.setStationID(Integer.valueOf(str2[0].substring(11)));
 			roadStationInf.setStationName(str2[1].substring(12));
+			roadStationInf.setStationID2(Integer.valueOf(str2[7].substring(11)));
 			roadStationInfs.add(roadStationInf);
-			System.out.print(str2[0].substring(11));
-			System.out.print(str2[1].substring(12));
 		}
 		return roadStationInfs;
-	}
-
-	
+	}	
 	//显示站点信息
-	public void ShowstationList(ArrayList<RoadStationInf> list){
-		
-		for(RoadStationInf roadStationInf : list){
-			
-			
-			System.out.println("getStationID----->" + roadStationInf.getStationID());
-			System.out.println("getStationName----->" + roadStationInf.getStationName());
-			
-		}
-		
+	public void ShowstationList(final ArrayList<RoadStationInf> list){
 		if(list.size() == 0 ){
 			Toast.makeText(getApplicationContext(), "没有数据可显示", 0).show();
 		}else{
-		//初始化对话框组件
-				LayoutInflater layoutInfalter = LayoutInflater.from(RoadActivity.this);
-				View myView = layoutInfalter.inflate(R.layout.station_info_dialog,null);
-				final ListView stationList = (ListView) myView.findViewById(R.id.station_info);
-				//显示对话框
-				AlertDialog.Builder myDialog = new AlertDialog.Builder(RoadActivity.this);
-				ArrayAdapter<RoadStationInf> adapter = new ArrayAdapter<RoadStationInf>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
-				stationList.setAdapter(adapter);
-				stationList.setOnItemClickListener(new OnItemClickListener() {
-					public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-						Toast.makeText(getApplicationContext(), "点击了" + arg2, 0).show();
-						RoadStationInf rsi = (RoadStationInf) stationList.getItemAtPosition(arg2);
-						//访问WebService接口
-						new Thread(new NetThread.GetNearCarOnTimeThread(myHandler, UrlConfig.url, UrlConfig.nameSpace, UrlConfig.MethodGetNear2Vehicle,rsi.getStationID(), UrlConfig.timeout, GET_NEAR_CAR)).start();
-						nearCarDialog = ProgressDialog.show(RoadActivity.this, "搜索最近公交车","正在搜索，请稍等.....",true);
-					}
-				});
-				
-				myDialog.setTitle("All Station");
-				myDialog.setIcon(android.R.drawable.ic_dialog_info);
-				myDialog.setView(myView);
-				myDialog.show();
+			//初始化对话框组件
+			LayoutInflater layoutInfalter = LayoutInflater.from(RoadActivity.this);
+			View myView = layoutInfalter.inflate(R.layout.station_info_dialog,null);
+			final ListView stationList = (ListView) myView.findViewById(R.id.station_info);
+			//显示对话框
+			AlertDialog.Builder myDialog = new AlertDialog.Builder(RoadActivity.this);
+			ArrayAdapter<RoadStationInf> adapter = new ArrayAdapter<RoadStationInf>(getApplicationContext(), android.R.layout.simple_list_item_1, list);
+			stationList.setAdapter(adapter);
+			stationList.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+					//RoadStationInf rsi = (RoadStationInf) stationList.getItemAtPosition(arg2);					
+					Intent intent = new Intent(RoadActivity.this, BusArrivalActivity.class);
+					intent.putExtra("PointIDA", list.get(arg2).getStationID());
+					intent.putExtra("PointIDB", list.get(arg2).getStationID2());
+					startActivity(intent);
+				}
+			});
+			
+			myDialog.setTitle("All Station");
+			myDialog.setIcon(android.R.drawable.ic_dialog_info);
+			myDialog.setView(myView);
+			myDialog.show();
 		}
+	}
+	int PointIDA; //当前站点ID
+	
+	/**
+	 * 计算下一辆到站时间
+	 * @param result
+	 */
+	private void GetBusArrivalEx(String result){
+		System.out.println(result);
+		List<BusArrivalInfo> busArrivalInfos = new ArrayList<BusArrivalInfo>();
+		String[] str1 = result.split("Bus=anyType");
+		for(int i = 1 ; i < str1.length ; i++){
+			String[] str2 = str1[i].split("; ");
+			BusArrivalInfo busArrivalInfo = new BusArrivalInfo();
+			busArrivalInfo.setStationID(Integer.valueOf(str2[2].substring(10)));
+			busArrivalInfo.setPercent(Integer.valueOf(str2[3].substring(8)));
+			busArrivalInfo.setVName(str2[1].substring(7));
+			busArrivalInfos.add(busArrivalInfo);
+			System.out.println(busArrivalInfo.toString());
+		}
+		if(busArrivalInfos.size() >= 1){
+			//如果当前车的起始站点为当前查询的站点，且Percent为0，显示到达
+			if(busArrivalInfos.get(0).getStationID() == PointIDA && busArrivalInfos.get(0).getPercent() == 0){
+				System.out.println(busArrivalInfos.get(0).getVName()+"车辆到达");
+			}else{
+				
+			}
+		}
+		
 	}
 }

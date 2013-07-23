@@ -88,5 +88,47 @@ public class WebService {
 		
 		return result.toString();
 	}
-	
+	/**
+	 * 获取站点间的信息，计算车辆到站时间
+	 * @param url
+	 * @param nameSpace
+	 * @param methodName
+	 * @param p_intVehiclePointID
+	 * @param p_intCurrPointID
+	 * @param timeout
+	 * @return
+	 * @throws Exception
+	 */
+	public static String GetNeedStation(String url , String nameSpace ,String methodName ,int p_intVehiclePointID,int p_intCurrPointID, int timeout) throws Exception{
+		SoapObject request = new SoapObject(nameSpace, methodName);
+    	request.addProperty("p_intVehiclePointID", p_intVehiclePointID);
+    	request.addProperty("p_intCurrPointID", p_intCurrPointID);
+    	SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    	envelope.setOutputSoapObject(request);
+    	envelope.dotNet = true;
+    	HttpTransportSE ht = new HttpTransportSE(url,timeout);
+    	ht.call(nameSpace + methodName, envelope);
+		SoapObject result = (SoapObject)envelope.getResponse();		
+		return result.toString();
+	}
+	/**
+	 * 获取终点名称
+	 * @param url
+	 * @param nameSpace
+	 * @param methodName
+	 * @param p_intPointID
+	 * @param timeout
+	 * @return
+	 * @throws Exception
+	 */
+	public static String GetDestination2(String url , String nameSpace ,String methodName ,int p_intPointID, int timeout) throws Exception{
+		SoapObject request = new SoapObject(nameSpace, methodName);
+    	request.addProperty("p_intPointID", p_intPointID);
+    	SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    	envelope.setOutputSoapObject(request);
+    	envelope.dotNet = true;
+    	HttpTransportSE ht = new HttpTransportSE(url,timeout);
+    	ht.call(nameSpace + methodName, envelope);
+		return envelope.bodyIn.toString();
+	}
 }

@@ -19,6 +19,8 @@ public class UrlConfig {
 	public static final String MethodGetStation_json = "GetStation_json";
 	//找到车辆所出站点到当前站点间所有站点的信息
 	public static final String MethodGetNeedStation = "GetNeedStation";
+	//取出线路的起点终点
+	public static final String MethodGetDestination2 = "GetDestination2";
 	//取广告信息
 	public static final String MethodGetAD = "GetAD";
 	

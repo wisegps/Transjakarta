@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"  
+    android:orientation="vertical">
+    <TextView 
+        android:id="@+id/tv_DestinationA"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="前往:"/>
+    <TextView
+        android:id="@+id/tv_bus_arraival_A"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""/> 
+    <TextView 
+        android:id="@+id/tv_DestinationB"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="前往:"/> 
+    <TextView 
+        android:id="@+id/tv_bus_arraival_B"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""/> 
+</LinearLayout>
