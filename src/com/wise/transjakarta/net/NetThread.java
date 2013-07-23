@@ -60,6 +60,10 @@ public class NetThread {
 				str = WebService.SoapGetRoadList(url, nameSpace, method, timeout);
 			} catch (Exception e) {
 				Log.e("error------>","“Ï≥£");
+				Message msg = new Message();
+				msg.what = tWhere;
+				msg.obj = "Exception";
+				tHandler.sendMessage(msg);
 				e.printStackTrace();
 			}finally{
 				Message msg = new Message();
@@ -100,6 +104,10 @@ public class NetThread {
 				request = WebService.SoapGetRoadStationInfo(url, nameSpace, method, roadName, timeout);
 			} catch (Exception e) {
 				Log.e("error------>","“Ï≥£");
+				Message msg = new Message();
+				msg.what = tWhere;
+				msg.obj = "Exception";
+				tHandler.sendMessage(msg);
 				e.printStackTrace();
 			}finally{
 				Message msg = new Message();
@@ -146,6 +154,10 @@ public class NetThread {
 				request = WebService.SoapGetNearCar(url, nameSpace, method, stationId, timeout);
 			} catch (Exception e) {
 				Log.e("error------>","“Ï≥£");
+				Message msg = new Message();
+				msg.what = tWhere;
+				msg.obj = "Exception";
+				tHandler.sendMessage(msg);
 				e.printStackTrace();
 			}finally{
 				Message msg = new Message();

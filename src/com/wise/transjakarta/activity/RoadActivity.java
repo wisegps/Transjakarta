@@ -79,20 +79,36 @@ public class RoadActivity extends Activity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch(msg.what){
+			//显示所有站点信息
 			case GET_STATION_INFO:
 				if(msg.obj != null){
 					stationDialog.dismiss();
-					result = (SoapObject) msg.obj;
-					//显示所有公交站点信息
-					
-					System.out.println(result);
-					ShowstationList(ParseSocpObject(String.valueOf(result)));
+					System.out.println("result------>" + msg.obj);
+					if(msg.obj.toString().indexOf("Exception") > 0){
+						Toast.makeText(RoadActivity.this, msg.obj.toString(), 0).show();
+						return;
+					}else{
+						result = (SoapObject) msg.obj;
+						//显示所有公交站点信息
+						
+						System.out.println(result);
+						ShowstationList(ParseSocpObject(String.valueOf(result)));
+					}
 				}
 				break;
+				
+				//显示下一辆公交到达时间
 			case GET_NEAR_CAR:
 				if(msg.obj != null){
 					nearCarDialog.dismiss();
+					if(msg.obj.toString().indexOf("Exception") > 0){
+						Toast.makeText(RoadActivity.this, msg.obj.toString(), 0).show();
+						return;
+					}else{
+						
+						
 					System.out.println("result----------->" + msg.obj.toString());
+					}
 				}
 				break;
 			}
@@ -102,34 +118,20 @@ public class RoadActivity extends Activity {
 	
 	//解析访问webService返回的SocpObject对象
 	public ArrayList<RoadStationInf> ParseSocpObject(String data){
+		if(roadStationInfs.size() > 0){
+			roadStationInfs.clear();
+		}
 		RoadStationInf roadStationInf = null;
 		ArrayList<String[]> strs = new ArrayList<String[]>();
 		String[] str1 = data.split("Station=anyType");
 		for(int i = 1 ; i < str1.length ; i ++){
-			String[] str2 = str1[i].split(";");
-			strs.add(str2);
-		}
-		for(int i = 0; i < strs.size() ; i ++){
-			String[] str = strs.get(i);
-			for(int j = 0 ; j < str.length ; j ++ ){
-				if(str[j].indexOf("=") > 0){
-					if(str[j].indexOf("{}") > 0){
-						str[j] = str[j].replace("{}", "");
-						roadStationInf = new RoadStationInf();
-						roadStationInf.setStationID(Integer.valueOf(str[0].substring(str[0].indexOf("=") + 1)));
-						roadStationInf.setStationName(str[1].substring(str[1].indexOf("=") + 1));
-						roadStationInf.setCenterX(Integer.valueOf(str[2].substring(str[2].indexOf("=") + 1)));
-						roadStationInf.setCenterY(Integer.valueOf(str[3].substring(str[3].indexOf("=") + 1)));
-						roadStationInf.setMile(Integer.valueOf(str[4].substring(str[4].indexOf("=") + 1)));
-						roadStationInf.setPlatform(Integer.valueOf(str[5].substring(str[5].indexOf("=") + 1)));
-						roadStationInf.setSegAvgSpeed(Integer.valueOf(str[6].substring(str[6].indexOf("=") + 1)));
-						roadStationInf.setStationID2(Integer.valueOf(str[7].substring(str[7].indexOf("=") + 1)));
-						roadStationInf.setRoadName1(str[8].substring(str[8].indexOf("=") + 1));
-						roadStationInf.setRoadName2(str[9].substring(str[9].indexOf("=") + 1));
-						roadStationInfs.add(roadStationInf);
-					}
-				}
-			}
+			String[] str2 = str1[i].split("; ");
+			roadStationInf = new RoadStationInf();
+			roadStationInf.setStationID(Integer.valueOf(str2[0].substring(11)));
+			roadStationInf.setStationName(str2[1].substring(12));
+			roadStationInfs.add(roadStationInf);
+			System.out.print(str2[0].substring(11));
+			System.out.print(str2[1].substring(12));
 		}
 		return roadStationInfs;
 	}
